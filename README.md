@@ -50,12 +50,13 @@ Sundown is in active development as a personal project. It is not currently a ho
 
 **Working:**
 
-- Text-based daily check-in with streaming follow-up questions
-- Structured extraction with Claude tool use
-- Postgres schema with raw + structured + embedding storage
+- Coming Soon
 
 **In progress:**
 
+- Text-based daily check-in with streaming follow-up questions
+- Structured extraction with Claude tool use
+- Postgres schema with raw + structured + embedding storage
 - Voice input with async transcription
 - Weekly summary generation
 - Semantic search across entry history
