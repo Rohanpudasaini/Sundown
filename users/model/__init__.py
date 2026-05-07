@@ -1,3 +1,7 @@
+from sqlalchemy import DateTime
+from datetime import datetime
+from sqlalchemy import Date
+from datetime import date
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.auth.pw_lib import hash_password
 from core.db import Base
@@ -22,6 +26,30 @@ class User(Base):
         self.hashed_password = hash_password(self.hashed_password)
         self.role_id = await Role.get_default_role(db)
         return await super().create(db)
+
+
+class WeeklySummary(Base):
+    id: Mapped[UUID] = mapped_column(default=uuid7, primary_key=True, index=True)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"), nullable=False)
+    week_start: Mapped[date] = mapped_column(Date, nullable=False)
+    week_end: Mapped[date] = mapped_column(Date, nullable=False)
+    summary: Mapped[str] = mapped_column(String, nullable=True)
+    themes: Mapped[str] = mapped_column(String, nullable=True)
+    mood_arch: Mapped[str] = mapped_column(String, nullable=True)
+    energy_arch: Mapped[str] = mapped_column(String, nullable=True)
+    generated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+
+
+class MonthlySummary(Base):
+    id: Mapped[UUID] = mapped_column(default=uuid7, primary_key=True, index=True)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"), nullable=False)
+    month_start: Mapped[date] = mapped_column(Date, nullable=False)
+    month_end: Mapped[date] = mapped_column(Date, nullable=False)
+    summary: Mapped[str] = mapped_column(String, nullable=True)
+    themes: Mapped[str] = mapped_column(String, nullable=True)
+    mood_arch: Mapped[str] = mapped_column(String, nullable=True)
+    energy_arch: Mapped[str] = mapped_column(String, nullable=True)
+    generated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
 
 role_permission = Table(
