@@ -30,6 +30,12 @@ Sundown is built around three layers that solve different parts of the long-term
 
 The follow-up questions you see during a check-in are streamed via Claude Haiku for low-latency UX. Heavier work — full extraction, weekly summaries, profile updates — runs in background jobs.
 
+## Model
+
+Here is a simple model of how Sundown works, available in [docs/models.excalidraw](docs/models.excalidraw)
+
+![Model](docs/models.excalidraw.png)
+
 ---
 
 ## Tech stack
