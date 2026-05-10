@@ -2,13 +2,13 @@ from sqlalchemy import Date
 from datetime import date
 from sqlalchemy import DateTime
 from datetime import datetime
-from sqlalchemy.ext.asyncio import AsyncSession
-from core.auth.pw_lib import hash_password
+
+# from sqlalchemy.ext.asyncio import AsyncSession
 from core.db import Base
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from uuid_extension import uuid7
 from uuid import UUID
-from sqlalchemy import Column, ForeignKey, String, Table, select
+from sqlalchemy import ForeignKey, String
 
 
 class Entry(Base):
