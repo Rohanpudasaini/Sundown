@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class BaseConfig(BaseSettings):
-    app_name: str = "LM-CRM Documentation Service"
+    app_name: str = "Sundown"
     version: str = "1.0.0"
     debug: bool
 
@@ -16,8 +16,7 @@ class SettingConfig(BaseConfig):
     POSTGRES_PASSWORD: str
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: int = 5432
-    POSTGRES_DB: str = "legalconnect"
-
+    POSTGRES_DB: str = "sundown"
     # Secrets
     SECRET_KEY: str  # For JWT
     ALGORITHM: str = "HS256"
