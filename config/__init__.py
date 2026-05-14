@@ -28,6 +28,14 @@ class SettingConfig(BaseConfig):
     MINIO_ROOT_USER: str
     MINIO_ROOT_PASSWORD: str
     MINIO_ENDPOINT: str
+    SMTP_HOST: str
+    SMTP_PORT: int
+    SMTP_USER: str
+    SMTP_PASSWORD: str
+    SMTP_FROM_NAME: str
+    SMTP_USE_TLS: bool
+    PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int
+    FRONTEND_URL: str
 
     @computed_field
     @property
