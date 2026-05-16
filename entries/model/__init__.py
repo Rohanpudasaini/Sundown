@@ -20,8 +20,6 @@ class Entry(Base):
     audio_url: Mapped[str] = mapped_column(String(255), nullable=True)
     raw_text: Mapped[str] = mapped_column(String(255), nullable=True)
     language_detected: Mapped[str] = mapped_column(String(255), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
 
 class Extractions(Base):
