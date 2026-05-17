@@ -1,10 +1,38 @@
+import importlib
 from logging.config import fileConfig
+from pathlib import Path
 
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 from config import settings
 from core.db import Base
+
+
+def import_model_modules() -> None:
+    """Dynamically import '<package>.model' for top-level app packages."""
+    project_root = Path(__file__).resolve().parents[1]
+
+    for package_dir in project_root.iterdir():
+        if not package_dir.is_dir() or package_dir.name.startswith("."):
+            continue
+
+        package_name = package_dir.name
+        if not package_name.isidentifier():
+            continue
+
+        if not (package_dir / "__init__.py").exists():
+            continue
+
+        has_model_package = (package_dir / "model" / "__init__.py").exists()
+        has_model_module = (package_dir / "model.py").exists()
+        if not (has_model_package or has_model_module):
+            continue
+
+        importlib.import_module(f"{package_name}.model")
+
+
+import_model_modules()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
