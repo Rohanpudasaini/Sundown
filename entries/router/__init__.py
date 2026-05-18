@@ -3,19 +3,23 @@ from entries.model import Entry, Extractions, FollowUpQuestions
 from fastapi import Depends
 from core.db.session import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from entries.schema import (
+    EntryBaseSchema,
+    ExtractionsBaseSchema,
+    FollowUpQuestionsBaseSchema,
+)
 
 app = APIRouter(prefix="/entries", tags=["entries"])
 
 
-@app.get("/")
+@app.get("/", response_model=list[EntryBaseSchema])
 async def read_entries(
     db: AsyncSession = Depends(get_db),
 ):
     return Entry.get(db)
 
 
-@app.get("/{id}")
+@app.get("/{id}", response_model=EntryBaseSchema)
 async def read_entry(
     id: str,
     db: AsyncSession = Depends(get_db),
@@ -23,14 +27,14 @@ async def read_entry(
     return Entry.get(db, id=id)
 
 
-@app.get("/extractions")
+@app.get("/extractions", response_model=list[ExtractionsBaseSchema])
 async def read_extractions(
     db: AsyncSession = Depends(get_db),
 ):
     return Extractions.get(db)
 
 
-@app.get("/extractions/{id}")
+@app.get("/extractions/{id}", response_model=ExtractionsBaseSchema)
 async def read_extraction(
     id: str,
     db: AsyncSession = Depends(get_db),
@@ -38,14 +42,14 @@ async def read_extraction(
     return Extractions.get(db, id=id)
 
 
-@app.get("/follow_up_questions")
+@app.get("/follow_up_questions", response_model=list[FollowUpQuestionsBaseSchema])
 async def read_follow_up_questions(
     db: AsyncSession = Depends(get_db),
 ):
     return FollowUpQuestions.get(db)
 
 
-@app.get("/follow_up_questions/{id}")
+@app.get("/follow_up_questions/{id}", response_model=FollowUpQuestionsBaseSchema)
 async def read_follow_up_question(
     id: str,
     db: AsyncSession = Depends(get_db),
@@ -55,7 +59,25 @@ async def read_follow_up_question(
 
 @app.post("/create_entry")
 async def create_entry(
-    data,  # TODO: Add proper schema with field validation
+    data: EntryBaseSchema,  # TODO: Add proper schema with field validation
     db: AsyncSession = Depends(get_db),
 ):
     return await Entry(**data.model_dump()).create(db=db)
+
+
+### TODO - Consult wheather we need endpoint for this or not
+# The extractions and followup should be handled by the backend itself and not exposed as an endpoint.
+@app.post("/create_extractions")
+async def create_extractions(
+    data: ExtractionsBaseSchema,  # TODO: Add proper schema with field validation
+    db: AsyncSession = Depends(get_db),
+):
+    return await Extractions(**data.model_dump()).create(db=db)
+
+
+@app.post("/create_follow_up_question")
+async def create_follow_up_question(
+    data: FollowUpQuestionsBaseSchema,  # TODO: Add proper schema with field validation
+    db: AsyncSession = Depends(get_db),
+):
+    return await FollowUpQuestions(**data.model_dump()).create(db=db)
