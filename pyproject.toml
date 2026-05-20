@@ -19,4 +19,5 @@ dependencies = [
     "uuid-extension>=0.2.0",
     "ruff>=0.15.9",
     "miniopy-async>=1.23.5",
+    "anthropic>=0.104.0",
 ]

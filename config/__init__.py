@@ -36,6 +36,8 @@ class SettingConfig(BaseConfig):
     SMTP_USE_TLS: bool
     PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int
     FRONTEND_URL: str
+    ANTHROPIC_API_KEY: str | None = None
+    OPENAI_API_KEY: str | None = None
 
     @computed_field
     @property
