@@ -1,3 +1,5 @@
+from abc import ABC, abstractmethod
+
 EXTRACTION_SYSTEM_PROMPT = """
 You are a structured journaling analyst. Extract psychological and behavioral signals from a user's journal entry.
 
@@ -35,3 +37,13 @@ Use them ONLY to determine recurring_themes. Do not change your reading of the c
 #       # ... up to 7 days
 #     ]
 #   }
+
+
+class BaseExtraction(ABC):
+    @abstractmethod
+    def extract(
+        self, entry_text: str, prior_extractions: list[dict] | None = None
+    ) -> dict:
+        raise NotImplementedError(
+            "Extraction subclasses must implement the extract method"
+        )
