@@ -20,4 +20,5 @@ dependencies = [
     "ruff>=0.15.9",
     "miniopy-async>=1.23.5",
     "anthropic>=0.104.0",
+    "greenlet>=3.3.2",
 ]
