@@ -21,6 +21,11 @@ class Entry(Base):
     raw_text: Mapped[str] = mapped_column(String(255), nullable=True)
     language_detected: Mapped[str] = mapped_column(String(255), nullable=True)
 
+    @staticmethod
+    def process_entry(entry_data: dict):
+        # Placeholder for the actual processing logic, e.g., calling the extraction system
+        print(f"Processing entry: {entry_data}")
+
 
 class Extractions(Base):
     id: Mapped[UUID] = mapped_column(default=uuid7, primary_key=True, index=True)

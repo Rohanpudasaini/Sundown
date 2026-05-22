@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 from entries.model import Entry, Extractions, FollowUpQuestions
 from fastapi import Depends
 from core.db.session import get_db
@@ -16,7 +16,7 @@ app = APIRouter(prefix="/entries", tags=["entries"])
 async def read_entries(
     db: AsyncSession = Depends(get_db),
 ):
-    return Entry.get(db)
+    return await Entry.get(db)
 
 
 @app.get("/{id}", response_model=EntryBaseSchema)
@@ -24,14 +24,14 @@ async def read_entry(
     id: str,
     db: AsyncSession = Depends(get_db),
 ):
-    return Entry.get(db, id=id)
+    return await Entry.get(db, id=id)
 
 
 @app.get("/extractions", response_model=list[ExtractionsBaseSchema])
 async def read_extractions(
     db: AsyncSession = Depends(get_db),
 ):
-    return Extractions.get(db)
+    return await Extractions.get(db)
 
 
 @app.get("/extractions/{id}", response_model=ExtractionsBaseSchema)
@@ -39,14 +39,14 @@ async def read_extraction(
     id: str,
     db: AsyncSession = Depends(get_db),
 ):
-    return Extractions.get(db, id=id)
+    return await Extractions.get(db, id=id)
 
 
 @app.get("/follow_up_questions", response_model=list[FollowUpQuestionsBaseSchema])
 async def read_follow_up_questions(
     db: AsyncSession = Depends(get_db),
 ):
-    return FollowUpQuestions.get(db)
+    return await FollowUpQuestions.get(db)
 
 
 @app.get("/follow_up_questions/{id}", response_model=FollowUpQuestionsBaseSchema)
@@ -54,14 +54,16 @@ async def read_follow_up_question(
     id: str,
     db: AsyncSession = Depends(get_db),
 ):
-    return FollowUpQuestions.get(db, id=id)
+    return await FollowUpQuestions.get(db, id=id)
 
 
 @app.post("/create_entry")
 async def create_entry(
     data: EntryBaseSchema,  # TODO: Add proper schema with field validation
+    bg_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
 ):
+    bg_tasks.add_task(Entry.process_entry, data.model_dump())
     return await Entry(**data.model_dump()).create(db=db)
 
 
