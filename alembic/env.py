@@ -12,6 +12,8 @@ from core.db import Base
 def import_model_modules() -> None:
     """Dynamically import '<package>.model' for top-level app packages."""
     project_root = Path(__file__).resolve().parents[1]
+    print(f"Project root for model discovery: {project_root}")
+    print(list(project_root.iterdir()))
 
     for package_dir in project_root.iterdir():
         if not package_dir.is_dir() or package_dir.name.startswith("."):
@@ -30,6 +32,7 @@ def import_model_modules() -> None:
             continue
 
         importlib.import_module(f"{package_name}.model")
+        print(f"Imported {package_name}.model for Alembic metadata discovery")
 
 
 import_model_modules()
