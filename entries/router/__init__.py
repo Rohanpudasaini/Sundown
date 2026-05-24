@@ -12,7 +12,10 @@ from entries.schema import (
 app = APIRouter(prefix="/entries", tags=["entries"])
 
 
-@app.get("/", response_model=list[EntryBaseSchema])
+@app.get(
+    "/",
+    #  response_model=list[EntryBaseSchema]
+)
 async def read_entries(
     db: AsyncSession = Depends(get_db),
 ):
@@ -27,7 +30,10 @@ async def read_entry(
     return await Entry.get(db, id=id)
 
 
-@app.get("/extractions", response_model=list[ExtractionsBaseSchema])
+@app.get(
+    "/extractions"
+    #  , response_model=list[ExtractionsBaseSchema]
+)
 async def read_extractions(
     db: AsyncSession = Depends(get_db),
 ):
@@ -39,7 +45,7 @@ async def read_extraction(
     id: str,
     db: AsyncSession = Depends(get_db),
 ):
-    return await Extractions.get(db, id=id)
+    return await Extractions.get_one(db, id=id)
 
 
 @app.get("/follow_up_questions", response_model=list[FollowUpQuestionsBaseSchema])
@@ -54,7 +60,7 @@ async def read_follow_up_question(
     id: str,
     db: AsyncSession = Depends(get_db),
 ):
-    return await FollowUpQuestions.get(db, id=id)
+    return await FollowUpQuestions.get_one(db, id=id)
 
 
 @app.post("/create_entry")
