@@ -11,6 +11,9 @@ from uuid import UUID
 from sqlalchemy import ForeignKey, String
 
 
+from core.extraction.claude import ClaudeExtraction
+
+
 class Entry(Base):
     id: Mapped[UUID] = mapped_column(default=uuid7, primary_key=True, index=True)
     user_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"), nullable=False)
@@ -24,7 +27,11 @@ class Entry(Base):
     @staticmethod
     def process_entry(entry_data: dict):
         # Placeholder for the actual processing logic, e.g., calling the extraction system
+        extractor = ClaudeExtraction()
         print(f"Processing entry: {entry_data}")
+        extraction_result = extractor.extract(entry_data["raw_text"])
+        print(f"Extraction result: {extraction_result}")
+        return extraction_result
 
 
 class Extractions(Base):

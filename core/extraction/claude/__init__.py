@@ -1,6 +1,6 @@
 import json
 
-from extraction import BaseExtraction, EXTRACTION_SYSTEM_PROMPT
+from core.extraction import BaseExtraction, EXTRACTION_SYSTEM_PROMPT
 from anthropic import Anthropic
 from config import settings
 
