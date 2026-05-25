@@ -65,7 +65,7 @@ async def read_follow_up_question(
 
 @app.post("/create_entry")
 async def create_entry(
-    data: EntryBaseSchema,  # TODO: Add proper schema with field validation
+    data: EntryBaseSchema,  # TODO: Currently we only have raw_text in the schema, need to add other fields and validation as well
     bg_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
 ):

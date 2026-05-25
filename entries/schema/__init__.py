@@ -5,6 +5,7 @@ from pydantic import BaseModel, model_validator
 
 
 class EntryBaseSchema(BaseModel):
+    # TODO FIX this to follow proper schema, curently bypassing other column to test
     # id: UUID
     # user_id: UUID
     # entry_date: datetime
