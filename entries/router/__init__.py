@@ -70,7 +70,8 @@ async def create_entry(
     db: AsyncSession = Depends(get_db),
 ):
     bg_tasks.add_task(Entry.process_entry, data.model_dump())
-    return await Entry(**data.model_dump()).create(db=db)
+    # return await Entry(**data.model_dump()).create(db=db)
+    return {"message": "Entry received and is being processed."}
 
 
 ### TODO - Consult wheather we need endpoint for this or not

@@ -5,14 +5,14 @@ from pydantic import BaseModel, model_validator
 
 
 class EntryBaseSchema(BaseModel):
-    id: UUID
-    user_id: UUID
-    entry_date: datetime
-    input_type: str
-    status: str
-    audio_url: str | None = None
+    # id: UUID
+    # user_id: UUID
+    # entry_date: datetime
+    # input_type: str
+    # status: str
+    # audio_url: str | None = None
     raw_text: str | None = None
-    language_detected: str | None = None
+    # language_detected: str | None = None
 
     @model_validator(mode="before")
     def validate_entry_date(cls, values):

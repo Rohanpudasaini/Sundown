@@ -35,4 +35,21 @@ class ClaudeExtraction(BaseExtraction):
             raise ValueError(
                 f"Unexpected response format from Claude got block type {block.type}, expected 'text'"
             )
-        return json.loads(block.text)
+        text = (
+            block.text.strip()
+            .removeprefix("```json")
+            .removeprefix("```")
+            .removesuffix("```")
+            .strip()
+        )
+
+        ## Pharsing with regex if the above doesn't work reliably
+
+        # import re
+
+        # text = block.text.strip()
+        # # Remove ```json ... ``` or ``` ... ```
+        # text = re.sub(r"^```(?:json)?\s*", "", text)
+        # text = re.sub(r"\s*```$", "", text)
+
+        return json.loads(text)
