@@ -5,6 +5,7 @@ from datetime import date, datetime, timezone
 # from sqlalchemy.ext.asyncio import AsyncSession
 from core.db import Base
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.ext.asyncio import AsyncSession
 from uuid_extension import uuid7
 from uuid import UUID
 from sqlalchemy import ForeignKey, String
@@ -23,8 +24,7 @@ class Entry(Base):
     raw_text: Mapped[str] = mapped_column(String(255), nullable=True)
     language_detected: Mapped[str] = mapped_column(String(255), nullable=True)
 
-    @staticmethod
-    def process_entry(entry_data: dict):
+    async def process_entry(self, entry_data: dict, db: AsyncSession):
         # Placeholder for the actual processing logic, e.g., calling the extraction system
         extractor = ClaudeExtraction()
         print(f"Processing entry: {entry_data}")
@@ -39,8 +39,7 @@ class Entry(Base):
         #     "intentions": None,
         #     "recurring_themes": None,
         # }
-
-        return extraction_result
+        await Extractions(entry_id=self.id, **extraction_result).create(db=db)
 
 
 class Extractions(Base):

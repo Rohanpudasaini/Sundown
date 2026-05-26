@@ -52,7 +52,10 @@ async def read_users(
     return await User.get(db=db, id=id, page=page, offset=offset)
 
 
-@app.post("/signup", dependencies=[Depends(get_current_user)])
+@app.post(
+    "/signup",
+    #    dependencies=[Depends(get_current_user)]
+)
 async def create_user(data: UserCreateSchema, db: AsyncSession = Depends(get_db)):
     return await User(**data.model_dump()).create(db=db)
 

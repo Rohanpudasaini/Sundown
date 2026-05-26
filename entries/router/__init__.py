@@ -77,7 +77,7 @@ async def create_entry(
     db: AsyncSession = Depends(get_db),
 ):
     entry = await Entry(**data.model_dump(), user_id=user_id).create(db=db)
-    bg_tasks.add_task(entry.process_entry, data.model_dump())
+    bg_tasks.add_task(entry.process_entry, data.model_dump(), db)
     return {"message": "Entry received and is being processed."}
 
 
