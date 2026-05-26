@@ -65,7 +65,7 @@ class Role(Base):
     name: Mapped[str] = mapped_column(String(255), unique=True)
     description: Mapped[str] = mapped_column(String(500))
     permissions: Mapped[list["Permission"]] = relationship(
-        secondary=role_permission, back_populates="roles"
+        secondary=role_permission, back_populates="roles", lazy="selectin"
     )
 
     @classmethod
