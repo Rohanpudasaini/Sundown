@@ -36,7 +36,7 @@ async def read_entry(
 
 @app.get(
     "/extractions"
-    #  , response_model=list[ExtractionsBaseSchema]
+    #  , response_model=list[ExtractionsBaseSchema]. # TODO: Add proper schema with field validation
 )
 async def read_extractions(
     db: AsyncSession = Depends(get_db),
