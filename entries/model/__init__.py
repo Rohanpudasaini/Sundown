@@ -1,7 +1,6 @@
 from sqlalchemy import Date
-from datetime import date
 from sqlalchemy import DateTime
-from datetime import datetime
+from datetime import date, datetime, timezone
 
 # from sqlalchemy.ext.asyncio import AsyncSession
 from core.db import Base
@@ -31,6 +30,16 @@ class Entry(Base):
         print(f"Processing entry: {entry_data}")
         extraction_result = extractor.extract(entry_data["raw_text"])
         print(f"Extraction result: {extraction_result}")
+        # response = {
+        #     "mood": "content",
+        #     "energy_level": "medium",
+        #     "topics": "work, social media usage, exercise, side project, coding streak",
+        #     "wins": "completed work tasks, did some exercise, made GitHub commit, maintained 155-day streak",
+        #     "missed": "scrolled too many reels",
+        #     "intentions": None,
+        #     "recurring_themes": None,
+        # }
+
         return extraction_result
 
 
@@ -45,7 +54,9 @@ class Extractions(Base):
     intentions: Mapped[str] = mapped_column(String(255), nullable=True)
     recurring_themes: Mapped[str] = mapped_column(String(255), nullable=True)
     model_version: Mapped[str] = mapped_column(String(255), nullable=True)
-    extracted_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    extracted_at: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.now(timezone.utc)
+    )
 
 
 class FollowUpQuestions(Base):

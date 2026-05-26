@@ -1,19 +1,18 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import UUID
 
 from pydantic import BaseModel, model_validator
 
 
 class EntryBaseSchema(BaseModel):
-    # TODO FIX this to follow proper schema, curently bypassing other column to test
-    # id: UUID
-    # user_id: UUID
-    # entry_date: datetime
-    # input_type: str
-    # status: str
-    # audio_url: str | None = None
+    id: UUID | None = None
+    user_id: UUID
+    entry_date: datetime = datetime.now(timezone.utc)
+    input_type: str
+    status: str = "received"
+    audio_url: str | None = None
     raw_text: str | None = None
-    # language_detected: str | None = None
+    language_detected: str | None = None
 
     @model_validator(mode="before")
     def validate_entry_date(cls, values):

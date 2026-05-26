@@ -1,3 +1,6 @@
+from typing import Annotated
+from uuid import UUID
+
 from fastapi import APIRouter, BackgroundTasks
 from entries.model import Entry, Extractions, FollowUpQuestions
 from fastapi import Depends
@@ -8,6 +11,7 @@ from entries.schema import (
     ExtractionsBaseSchema,
     FollowUpQuestionsBaseSchema,
 )
+from users.router import get_current_user
 
 app = APIRouter(prefix="/entries", tags=["entries"])
 
@@ -63,14 +67,17 @@ async def read_follow_up_question(
     return await FollowUpQuestions.get_one(db, id=id)
 
 
-@app.post("/create_entry")
+@app.post(
+    "/create_entry",
+)
 async def create_entry(
-    data: EntryBaseSchema,  # TODO: Currently we only have raw_text in the schema, need to add other fields and validation as well
+    data: EntryBaseSchema,
     bg_tasks: BackgroundTasks,
+    user_id: Annotated[UUID, Depends(get_current_user)],
     db: AsyncSession = Depends(get_db),
 ):
-    bg_tasks.add_task(Entry.process_entry, data.model_dump())
-    # return await Entry(**data.model_dump()).create(db=db)
+    entry = await Entry(**data.model_dump(), user_id=user_id).create(db=db)
+    bg_tasks.add_task(entry.process_entry, data.model_dump())
     return {"message": "Entry received and is being processed."}
 
 
