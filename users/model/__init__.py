@@ -9,6 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid_extension import uuid7
 from uuid import UUID
 from sqlalchemy import Column, ForeignKey, String, Table, select
+from pgvector.sqlalchemy import Vector
 
 
 class User(Base):
@@ -28,6 +29,30 @@ class User(Base):
         return await super().create(db)
 
 
+class UserProfile(Base):
+    """Maintained user profile document updated after each entry."""
+    id: Mapped[UUID] = mapped_column(default=uuid7, primary_key=True, index=True)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"), unique=True, nullable=False)
+    # Core personality/tendencies
+    personality_summary: Mapped[str] = mapped_column(String, nullable=True)
+    # Recurring themes across all time
+    core_themes: Mapped[str] = mapped_column(String, nullable=True)  # comma-separated
+    # Emotional patterns
+    typical_mood_range: Mapped[str] = mapped_column(String, nullable=True)
+    # Behavioral patterns
+    common_wins: Mapped[str] = mapped_column(String, nullable=True)
+    common_struggles: Mapped[str] = mapped_column(String, nullable=True)
+    # Goals and intentions
+    long_term_goals: Mapped[str] = mapped_column(String, nullable=True)
+    # Language preferences
+    primary_language: Mapped[str] = mapped_column(String, nullable=True)
+    # Metadata
+    entry_count: Mapped[int] = mapped_column(default=0)
+    last_updated: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, onupdate=datetime.utcnow, nullable=True)
+    embedding: Mapped[list[float]] = mapped_column(Vector(1536), nullable=True)
+
+
 class WeeklySummary(Base):
     id: Mapped[UUID] = mapped_column(default=uuid7, primary_key=True, index=True)
     user_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"), nullable=False)
@@ -38,6 +63,7 @@ class WeeklySummary(Base):
     mood_arch: Mapped[str] = mapped_column(String, nullable=True)
     energy_arch: Mapped[str] = mapped_column(String, nullable=True)
     generated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    embedding: Mapped[list[float]] = mapped_column(Vector(1536), nullable=True)
 
 
 class MonthlySummary(Base):
@@ -50,6 +76,7 @@ class MonthlySummary(Base):
     mood_arch: Mapped[str] = mapped_column(String, nullable=True)
     energy_arch: Mapped[str] = mapped_column(String, nullable=True)
     generated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    embedding: Mapped[list[float]] = mapped_column(Vector(1536), nullable=True)
 
 
 role_permission = Table(

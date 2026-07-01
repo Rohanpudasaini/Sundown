@@ -38,6 +38,9 @@ class SettingConfig(BaseConfig):
     FRONTEND_URL: str
     ANTHROPIC_API_KEY: str | None = None
     OPENAI_API_KEY: str | None = None
+    # Redis
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
 
     @computed_field
     @property

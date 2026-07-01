@@ -1,6 +1,7 @@
 from sqlalchemy import Date
 from sqlalchemy import DateTime
 from datetime import date, datetime, timezone
+from pgvector.sqlalchemy import Vector
 
 # from sqlalchemy.ext.asyncio import AsyncSession
 from core.db import Base
@@ -23,6 +24,7 @@ class Entry(Base):
     audio_url: Mapped[str] = mapped_column(String(255), nullable=True)
     raw_text: Mapped[str] = mapped_column(String(255), nullable=True)
     language_detected: Mapped[str] = mapped_column(String(255), nullable=True)
+    embedding: Mapped[list[float]] = mapped_column(Vector(1536), nullable=True)
 
     async def process_entry(self, entry_data: dict, db: AsyncSession):
         # Placeholder for the actual processing logic, e.g., calling the extraction system
@@ -56,6 +58,7 @@ class Extractions(Base):
     extracted_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now(timezone.utc)
     )
+    embedding: Mapped[list[float]] = mapped_column(Vector(1536), nullable=True)
 
 
 class FollowUpQuestions(Base):
