@@ -1,7 +1,7 @@
 [project]
-name = "ims"
+name = "sundown"
 version = "0.1.0"
-description = "Add your description here"
+description = "A daily review assistant that listens, asks better questions, and helps you see the patterns in your own days."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -22,4 +22,8 @@ dependencies = [
     "anthropic>=0.104.0",
     "greenlet>=3.3.2",
     "ipdb>=0.13.13",
+    "pgvector>=0.2.5",
+    "arq>=0.27.0",
+    "redis>=5.2.0",
+    "faster-whisper>=1.1.0",
 ]

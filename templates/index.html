@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sundown - Daily Review Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Auth Screen -->
+        <div id="auth-screen" class="screen active">
+            <div class="auth-container">
+                <div class="logo">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    <h1>Sundown</h1>
+                </div>
+                <p class="tagline">Your daily review assistant</p>
+                
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Sign In</button>
+                    <button class="auth-tab" data-tab="signup">Sign Up</button>
+                </div>
+                
+                <form id="login-form" class="auth-form active">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" name="email" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                </form>
+                
+                <form id="signup-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="signup-username">Username</label>
+                        <input type="text" id="signup-username" name="username" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" name="email" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" name="password" required minlength="8" autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Main App Screen -->
+        <div id="main-screen" class="screen">
+            <header class="app-header">
+                <div class="header-left">
+                    <h1>Sundown</h1>
+                </div>
+                <div class="header-right">
+                    <button id="logout-btn" class="btn btn-ghost btn-sm">Sign Out</button>
+                </div>
+            </header>
+            
+            <main class="app-main">
+                <!-- Entry Form -->
+                <section id="entry-section" class="card">
+                    <h2>Today's Check-in</h2>
+                    <p class="section-hint">How was your day? Write or speak freely.</p>
+                    
+                    <div class="input-methods">
+                        <button id="text-input-btn" class="input-method-btn active" data-method="text">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                                <path d="m15 5 4 4"/>
+                            </svg>
+                            <span>Type</span>
+                        </button>
+                        <button id="voice-input-btn" class="input-method-btn" data-method="voice">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                <line x1="12" x2="12" y1="19" y2="22"/>
+                            </svg>
+                            <span>Voice</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Text Input -->
+                    <div id="text-input-area" class="input-area active">
+                        <textarea id="entry-text" placeholder="What happened today? What stood out? What are you thinking about?" rows="6"></textarea>
+                        <div class="input-actions">
+                            <button id="save-entry-btn" class="btn btn-primary">Save Entry</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Voice Input -->
+                    <div id="voice-input-area" class="input-area">
+                        <div class="voice-recorder" id="voice-recorder">
+                            <div class="recording-visualizer">
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                            </div>
+                            <button id="record-btn" class="btn btn-record" aria-label="Start recording">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="12" r="8"/>
+                                </svg>
+                            </button>
+                            <button id="stop-btn" class="btn btn-record btn-stop hidden" aria-label="Stop recording">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <rect x="6" y="6" width="12" height="12" rx="2"/>
+                                </svg>
+                            </button>
+                            <p class="recording-status">Tap to start recording</p>
+                            <p class="recording-timer hidden">00:00</p>
+                        </div>
+                        <div class="voice-transcript hidden" id="voice-transcript">
+                            <h4>Transcript</h4>
+                            <textarea id="transcript-text" readonly rows="4"></textarea>
+                            <div class="transcript-actions">
+                                <button id="re-record-btn" class="btn btn-secondary">Re-record</button>
+                                <button id="use-transcript-btn" class="btn btn-primary">Use This</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Follow-up Questions -->
+                <section id="followup-section" class="card hidden">
+                    <h2>Reflection Questions</h2>
+                    <div id="followup-questions" class="followup-list"></div>
+                    <div id="followup-loading" class="loading-state hidden">
+                        <div class="spinner"></div>
+                        <p>Generating thoughtful questions...</p>
+                    </div>
+                </section>
+                
+                <!-- Recent Entries -->
+                <section id="history-section" class="card">
+                    <div class="section-header">
+                        <h2>Recent Entries</h2>
+                        <button id="search-btn" class="btn btn-ghost btn-sm">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.3-4.3"/>
+                            </svg>
+                            Search
+                        </button>
+                    </div>
+                    <div id="entries-list" class="entries-list">
+                        <div class="empty-state">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                                <path d="m15 5 4 4"/>
+                            </svg>
+                            <p>No entries yet. Start your first check-in above!</p>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Search Modal -->
+    <div id="search-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Search Your Journal</h3>
+                <button id="close-search" class="btn btn-ghost btn-sm">&times;</button>
+            </div>
+            <div class="search-form">
+                <div class="form-group">
+                    <label for="search-query">What are you looking for?</label>
+                    <input type="text" id="search-query" placeholder="e.g. 'work stress last month' or 'when did I feel proud?'">
+                </div>
+                <div class="form-group">
+                    <label for="search-source">Search in</label>
+                    <select id="search-source">
+                        <option value="entries">Raw Entries</option>
+                        <option value="extractions">Structured Insights</option>
+                        <option value="weekly">Weekly Summaries</option>
+                        <option value="monthly">Monthly Summaries</option>
+                    </select>
+                </div>
+                <button id="search-submit" class="btn btn-primary btn-block">Search</button>
+            </div>
+            <div id="search-results" class="search-results"></div>
+        </div>
+    </div>
+    
+    <script src="/static/app.js"></script>
+</body>
+</html>
