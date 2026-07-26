@@ -87,7 +87,7 @@ async def create_entry(
     user_id: Annotated[UUID, Depends(get_current_user)],
     db: AsyncSession = Depends(get_db),
 ):
-    entry = await Entry(**data.model_dump(), user_id=user_id).create(db=db)
+    entry = await Entry(**data.model_dump(exclude={"user_id"}), user_id=user_id).create(db=db)
     
     # Enqueue background job for processing
     redis = await get_redis_pool()
