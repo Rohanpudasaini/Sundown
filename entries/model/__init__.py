@@ -54,7 +54,7 @@ class Extractions(Base):
     recurring_themes: Mapped[str] = mapped_column(String(255), nullable=True)
     model_version: Mapped[str] = mapped_column(String(255), nullable=True)
     extracted_at: Mapped[datetime] = mapped_column(
-        DateTime, nullable=False, default=datetime.now(timezone.utc)
+        DateTime(timezone=True), nullable=False, default=datetime.now(timezone.utc)
     )
 
 

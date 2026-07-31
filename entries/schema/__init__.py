@@ -6,7 +6,7 @@ from pydantic import BaseModel, model_validator
 
 class EntryBaseSchema(BaseModel):
     id: UUID | None = None
-    user_id: UUID
+    user_id: UUID | None = None 
     entry_date: datetime = datetime.now(timezone.utc)
     input_type: str
     status: str = "received"
