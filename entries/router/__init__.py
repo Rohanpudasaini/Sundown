@@ -31,7 +31,7 @@ async def read_entry(
     id: str,
     db: AsyncSession = Depends(get_db),
 ):
-    return await Entry.get(db, id=id)
+    return await Entry.get_one(db, id=id)
 
 
 @app.get(
@@ -76,7 +76,9 @@ async def create_entry(
     user_id: Annotated[UUID, Depends(get_current_user)],
     db: AsyncSession = Depends(get_db),
 ):
-    entry = await Entry(**data.model_dump(exclude_none=True, exclude_unset=True), user_id=user_id).create(db=db)
+    entry = await Entry(
+        **data.model_dump(exclude_none=True, exclude_unset=True), user_id=user_id
+    ).create(db=db)
     bg_tasks.add_task(entry.process_entry, data.model_dump(), db)
     return {"message": "Entry received and is being processed."}
 

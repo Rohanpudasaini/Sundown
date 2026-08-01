@@ -103,27 +103,17 @@ class Base(DeclarativeBase):
         return result.scalars().first()
 
     @classmethod
-    async def get(cls, db, id=None, page=1, offset=20):
+    async def get(cls, db, page=1, offset=20):
         page = max(page, 1)
         offset = max(offset, 1)
         filters = and_(cls.is_deleted.is_(False), cls.is_active)
 
-        if id is None:
-            skip = (page - 1) * offset
-            total = await db.scalar(
-                select(func.count()).select_from(cls).where(filters)
-            )
-            result = await db.execute(
-                select(cls).where(filters).offset(skip).limit(offset)
-            )
-            return {
-                "total": total or 0,
-                "page": page,
-                "size": offset,
-                "results": result.scalars().all(),
-            }
-
-        result = await db.execute(
-            select(cls).where(and_(cls.id == id, filters))  # type: ignore
-        )
-        return result.scalars().first()
+        skip = (page - 1) * offset
+        total = await db.scalar(select(func.count()).select_from(cls).where(filters))
+        result = await db.execute(select(cls).where(filters).offset(skip).limit(offset))
+        return {
+            "total": total or 0,
+            "page": page,
+            "size": offset,
+            "results": result.scalars().all(),
+        }
