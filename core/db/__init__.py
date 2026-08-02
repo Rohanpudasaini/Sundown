@@ -100,7 +100,7 @@ class Base(DeclarativeBase):
                 and_(cls.id == id, and_(cls.is_deleted.is_(False), cls.is_active))  # type: ignore
             )
         )
-        return result.scalars().first()
+        return result.scalars().one()
 
     @classmethod
     async def get(cls, db, page=1, offset=20):
