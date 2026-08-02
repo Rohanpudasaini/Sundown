@@ -26,14 +26,6 @@ async def read_entries(
     return await Entry.get(db)
 
 
-@app.get("/{id}", response_model=EntryBaseSchema)
-async def read_entry(
-    id: str,
-    db: AsyncSession = Depends(get_db),
-):
-    return await Entry.get_one(db, id=id)
-
-
 @app.get(
     "/extractions"
     #  , response_model=list[ExtractionsBaseSchema]. # TODO: Add proper schema with field validation
@@ -42,6 +34,14 @@ async def read_extractions(
     db: AsyncSession = Depends(get_db),
 ):
     return await Extractions.get(db)
+
+
+@app.get("/{id}", response_model=EntryBaseSchema)
+async def read_entry(
+    id: str,
+    db: AsyncSession = Depends(get_db),
+):
+    return await Entry.get_one(db, id=id)
 
 
 @app.get("/extractions/{id}", response_model=ExtractionsBaseSchema)
