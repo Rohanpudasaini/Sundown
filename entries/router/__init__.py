@@ -79,6 +79,7 @@ async def create_entry(
     entry = await Entry(
         **data.model_dump(exclude_none=True, exclude_unset=True), user_id=user_id
     ).create(db=db)
+    data.user_id = user_id
     bg_tasks.add_task(entry.process_entry, data.model_dump(), db)
     return {"message": "Entry received and is being processed."}
 
