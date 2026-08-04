@@ -49,7 +49,7 @@ async def read_users(
     page: int = 1,
     offset: int = 20,
 ):
-    return await User.get(db=db, id=id, page=page, offset=offset)
+    return await User.get(db=db, page=page, offset=offset)
 
 
 @app.post("/signup", dependencies=[Depends(get_current_user)])
@@ -68,7 +68,7 @@ async def read_roles(
     page: int = 1,
     offset: int = 20,
 ):
-    return await Role.get(db=db, id=id, page=page, offset=offset)
+    return await Role.get(db=db, page=page, offset=offset)
 
 
 @app.get(
@@ -82,7 +82,7 @@ async def read_permissions(
     page: int = 1,
     offset: int = 20,
 ):
-    return await Permission.get(db=db, id=id, page=page, offset=offset)
+    return await Permission.get(db=db, page=page, offset=offset)
 
 
 @app.post("/login", response_model=TokenSchema)
