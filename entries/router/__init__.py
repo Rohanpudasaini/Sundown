@@ -31,9 +31,12 @@ async def read_entries(
     #  , response_model=list[ExtractionsBaseSchema]. # TODO: Add proper schema with field validation
 )
 async def read_extractions(
+    user_id: Annotated[UUID, Depends(get_current_user)],
     db: AsyncSession = Depends(get_db),
+    page: int = 1,
+    offset: int = 20,
 ):
-    return await Extractions.get(db)
+    return await Extractions.get(db, page=page, offset=offset, user_id=user_id)
 
 
 @app.get("/{id}", response_model=EntryBaseSchema)

@@ -1,10 +1,11 @@
-from sqlalchemy import Date, select
+from sqlalchemy import Date, func, select
 from sqlalchemy import DateTime
 from datetime import date, datetime, timezone
 
 # from sqlalchemy.ext.asyncio import AsyncSession
 from core.db import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import and_
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid_extension import uuid7
 from uuid import UUID
@@ -91,6 +92,33 @@ class Extractions(Base):
         default=lambda: datetime.now(timezone.utc),
     )
     entry: Mapped["Entry"] = relationship(back_populates="extractions", lazy="raise")
+
+    @classmethod
+    async def get(cls, db, page=1, offset=20, user_id: UUID | None = None):
+        if user_id:
+            page = max(page, 1)
+            offset = max(offset, 1)
+            filters = and_(
+                cls.is_deleted.is_(False), cls.is_active, cls.user_id == user_id
+            )  # type: ignore
+            # stmt = select(cls).where(
+            #     and_(cls.is_deleted.is_(False), cls.is_active)  # type: ignore
+            # )
+            # stmt = stmt.where(cls.user_id == user_id)
+            skip = (page - 1) * offset
+            total = await db.scalar(
+                select(func.count()).select_from(cls).where(filters)
+            )
+            result = await db.execute(
+                select(cls).where(filters).offset(skip).limit(offset)
+            )
+            return {
+                "total": total or 0,
+                "page": page,
+                "size": offset,
+                "results": result.scalars().all(),
+            }
+        return await super().get(db, page=page, offset=offset)
 
 
 class FollowUpQuestions(Base):
