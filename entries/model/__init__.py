@@ -87,6 +87,9 @@ class Extractions(Base):
     entry_id: Mapped[UUID] = mapped_column(
         ForeignKey("entry.id"), nullable=False, index=True
     )
+    user_id: Mapped[UUID] = mapped_column(
+        ForeignKey("user.id"), nullable=True, index=True
+    )
     mood: Mapped[str] = mapped_column(String(255), nullable=True)
     energy_level: Mapped[str] = mapped_column(String(255), nullable=True)
     topics: Mapped[str] = mapped_column(String(255), nullable=True)
