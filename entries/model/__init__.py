@@ -45,12 +45,10 @@ class Entry(Base):
     ) -> list[dict]:
         stmt = (
             select(Extractions)
-            .join(Entry, Extractions.entry_id == Entry.id)
             .where(
-                Entry.user_id == self.user_id,
-                # Entry.entry_date < self.entry_date,
+                Extractions.user_id == self.user_id,
             )
-            .order_by(Entry.entry_date.desc())
+            .order_by(Extractions.extracted_at.desc())
             .limit(limit)
         )
         rows = (await db.execute(stmt)).scalars().all()
@@ -61,25 +59,14 @@ class Entry(Base):
         ]
 
     async def process_entry(self, entry_data: dict, db: AsyncSession):
-        # Placeholder for the actual processing logic, e.g., calling the extraction system
-        print(f"Processing entry with ID: {self.id} and data: {entry_data}")
         prior = await self.get_prior_extractions(db)
         extractor = ClaudeExtraction()
-        print(f"Processing entry: {entry_data}")
         extraction_result = extractor.extract(
             entry_data["raw_text"], prior_extractions=prior
         )
-        print(f"Extraction result: {extraction_result}")
-        # # response = {
-        # #     "mood": "content",
-        # #     "energy_level": "medium",
-        # #     "topics": "work, social media usage, exercise, side project, coding streak",
-        # #     "wins": "completed work tasks, did some exercise, made GitHub commit, maintained 155-day streak",
-        # #     "missed": "scrolled too many reels",
-        # #     "intentions": None,
-        # #     "recurring_themes": None,
-        # # }
-        await Extractions(entry_id=self.id, **extraction_result).create(db=db)
+        await Extractions(
+            entry_id=self.id, **extraction_result, user_id=self.user_id
+        ).create(db=db)
 
 
 class Extractions(Base):

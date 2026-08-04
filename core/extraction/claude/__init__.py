@@ -20,10 +20,6 @@ class ClaudeExtraction(BaseExtraction):
                 f"- {e.get('extracted_at')}: mood={e.get('mood')}, topics={e.get('topics')}, wins={e.get('wins')}, missed={e.get('missed')}, intentions={e.get('intentions')}, recurring_themes={e.get('recurring_themes')}"
                 for e in prior_extractions[-7:]
             )
-            print("*" * 50)
-            print(f"Using prior extractions for context: {prior_extractions[-7:]}")
-            print(f"System prompt with prior extractions: {system_prompt}")
-            print("*" * 50)
 
         response = self.client.messages.create(
             model="claude-sonnet-4-5",
