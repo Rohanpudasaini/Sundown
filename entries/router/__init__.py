@@ -29,7 +29,7 @@ async def read_entries(
 
 @app.get(
     "/extractions",
-    response_model=ExtractionPaginatedSchema,  # TODO: Add proper schema with field validation
+    response_model=ExtractionPaginatedSchema,
 )
 async def read_extractions(
     user_id: Annotated[UUID, Depends(get_current_user)],
