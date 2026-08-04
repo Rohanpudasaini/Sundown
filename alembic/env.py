@@ -12,8 +12,6 @@ from core.db import Base
 def import_model_modules() -> None:
     """Dynamically import '<package>.model' for top-level app packages."""
     project_root = Path(__file__).resolve().parents[1]
-    print(f"Project root for model discovery: {project_root}")
-    print(list(project_root.iterdir()))
 
     for package_dir in project_root.iterdir():
         if not package_dir.is_dir() or package_dir.name.startswith("."):
@@ -37,25 +35,13 @@ def import_model_modules() -> None:
 
 import_model_modules()
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
 config = context.config
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 db_url = str(settings.SQLALCHEMY_DATABASE_URI)
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
 config.set_main_option("sqlalchemy.url", db_url.replace("asyncpg", "psycopg2"))
 
 
