@@ -8,6 +8,7 @@ from core.db.session import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from entries.schema import (
     EntryBaseSchema,
+    ExtractionPaginatedSchema,
     ExtractionsBaseSchema,
     FollowUpQuestionsBaseSchema,
 )
@@ -27,8 +28,8 @@ async def read_entries(
 
 
 @app.get(
-    "/extractions"
-    #  , response_model=list[ExtractionsBaseSchema]. # TODO: Add proper schema with field validation
+    "/extractions",
+    response_model=ExtractionPaginatedSchema,  # TODO: Add proper schema with field validation
 )
 async def read_extractions(
     user_id: Annotated[UUID, Depends(get_current_user)],

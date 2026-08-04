@@ -6,7 +6,7 @@ from pydantic import BaseModel, model_validator
 
 class EntryBaseSchema(BaseModel):
     id: UUID | None = None
-    user_id: UUID | None = None 
+    user_id: UUID | None = None
     entry_date: datetime = datetime.now(timezone.utc)
     input_type: str
     status: str = "received"
@@ -35,6 +35,13 @@ class ExtractionsBaseSchema(BaseModel):
     recurring_themes: str | None = None
     model_version: str | None = None
     extracted_at: datetime
+
+
+class ExtractionPaginatedSchema(BaseModel):
+    total: int
+    page: int
+    size: int
+    results: list[ExtractionsBaseSchema]
 
 
 class FollowUpQuestionsBaseSchema(BaseModel):
