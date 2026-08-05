@@ -100,11 +100,7 @@ class Extractions(Base):
             offset = max(offset, 1)
             filters = and_(
                 cls.is_deleted.is_(False), cls.is_active, cls.user_id == user_id
-            )  # type: ignore
-            # stmt = select(cls).where(
-            #     and_(cls.is_deleted.is_(False), cls.is_active)  # type: ignore
-            # )
-            # stmt = stmt.where(cls.user_id == user_id)
+            )
             skip = (page - 1) * offset
             total = await db.scalar(
                 select(func.count()).select_from(cls).where(filters)
