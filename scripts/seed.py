@@ -2,6 +2,7 @@
 Seed roles and permissions. Run once after migrations.
 Usage: python -m scripts.seed
 """
+
 import asyncio
 import sys
 import os
@@ -11,30 +12,30 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from core.db.session import AsyncSessionLocal
-from users.model import Permission, Role, role_permission
+from users.model import Permission, Role
 
 PERMISSIONS = [
     # Entries
-    ("entries:read",          "Read own journal entries"),
-    ("entries:write",         "Create and edit own journal entries"),
-    ("entries:delete",        "Delete own journal entries"),
-    ("entries:export",        "Export own entries to PDF/CSV"),
+    ("entries:read", "Read own journal entries"),
+    ("entries:write", "Create and edit own journal entries"),
+    ("entries:delete", "Delete own journal entries"),
+    ("entries:export", "Export own entries to PDF/CSV"),
     # Summaries
     ("summaries:weekly:read", "View own weekly summaries"),
-    ("summaries:monthly:read","View own monthly summaries"),
-    ("summaries:generate",    "Trigger AI summary generation"),
+    ("summaries:monthly:read", "View own monthly summaries"),
+    ("summaries:generate", "Trigger AI summary generation"),
     # Admin — user management
-    ("admin:users:read",      "List and view all users"),
-    ("admin:users:write",     "Create and edit users"),
-    ("admin:users:delete",    "Delete or deactivate users"),
+    ("admin:users:read", "List and view all users"),
+    ("admin:users:write", "Create and edit users"),
+    ("admin:users:delete", "Delete or deactivate users"),
     # Admin — roles
-    ("admin:roles:read",      "View roles and permissions"),
-    ("admin:roles:write",     "Create and assign roles"),
+    ("admin:roles:read", "View roles and permissions"),
+    ("admin:roles:write", "Create and assign roles"),
     # Admin — entries (moderation)
-    ("admin:entries:read",    "Read any user's entries"),
-    ("admin:entries:delete",  "Delete any user's entries"),
+    ("admin:entries:read", "Read any user's entries"),
+    ("admin:entries:delete", "Delete any user's entries"),
     # Admin — system
-    ("admin:system:config",   "Modify system-level configuration"),
+    ("admin:system:config", "Modify system-level configuration"),
 ]
 
 ROLES = {
@@ -77,9 +78,9 @@ async def seed():
         # Upsert permissions
         perm_map: dict[str, Permission] = {}
         for name, description in PERMISSIONS:
-            existing = (await db.execute(
-                select(Permission).where(Permission.name == name)
-            )).scalar_one_or_none()
+            existing = (
+                await db.execute(select(Permission).where(Permission.name == name))
+            ).scalar_one_or_none()
 
             if existing:
                 perm_map[name] = existing
@@ -93,9 +94,13 @@ async def seed():
 
         # Upsert roles + assign permissions
         for role_name, role_def in ROLES.items():
-            existing = (await db.execute(
-                select(Role).where(Role.name == role_name).options(selectinload(Role.permissions))
-            )).scalar_one_or_none()
+            existing = (
+                await db.execute(
+                    select(Role)
+                    .where(Role.name == role_name)
+                    .options(selectinload(Role.permissions))
+                )
+            ).scalar_one_or_none()
 
             if existing:
                 role = existing
