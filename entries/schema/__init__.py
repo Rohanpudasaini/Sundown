@@ -15,7 +15,7 @@ class EntryBaseSchema(BaseModel):
     language_detected: str | None = None
 
     @model_validator(mode="before")
-    def validate_entry_date(cls, values):
+    def validate_entry_data(cls, values):
         audio = values.get("audio_url")
         raw_text = values.get("raw_text")
         if not audio and not raw_text:

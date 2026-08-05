@@ -17,10 +17,7 @@ from users.router import get_current_user
 app = APIRouter(prefix="/entries", tags=["entries"])
 
 
-@app.get(
-    "/",
-    #  response_model=list[EntryBaseSchema]
-)
+@app.get("/", response_model=list[EntryBaseSchema])
 async def read_entries(
     db: AsyncSession = Depends(get_db),
 ):
@@ -88,19 +85,9 @@ async def create_entry(
     return {"message": "Entry received and is being processed."}
 
 
-### TODO - Consult wheather we need endpoint for this or not
-# The extractions and followup should be handled by the backend itself and not exposed as an endpoint.
-@app.post("/create_extractions")
-async def create_extractions(
-    data: ExtractionsBaseSchema,  # TODO: Add proper schema with field validation
-    db: AsyncSession = Depends(get_db),
-):
-    return await Extractions(**data.model_dump()).create(db=db)
-
-
 @app.post("/create_follow_up_question")
 async def create_follow_up_question(
-    data: FollowUpQuestionsBaseSchema,  # TODO: Add proper schema with field validation
+    data: FollowUpQuestionsBaseSchema,
     db: AsyncSession = Depends(get_db),
 ):
     return await FollowUpQuestions(**data.model_dump()).create(db=db)

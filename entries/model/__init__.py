@@ -53,7 +53,6 @@ class Entry(Base):
             .limit(limit)
         )
         rows = (await db.execute(stmt)).scalars().all()
-        # oldest → newest reads better for the model
         return [
             {f: getattr(r, f) for f in _PRIOR_FIELDS if getattr(r, f) is not None}
             for r in reversed(rows)
