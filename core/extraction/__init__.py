@@ -29,15 +29,6 @@ If prior journal extractions are provided, they appear under the key "prior_extr
 Use them ONLY to determine recurring_themes. Do not change your reading of the current entry based on them.
 """.strip()
 
-# TODO: Format to send the previous extractions
-# {
-#     "entry_text": "...",
-#     "prior_extractions": [
-#       {"date": "2026-05-15", "mood": "anxious", "topics": "work, sleep", ...},
-#       # ... up to 7 days
-#     ]
-#   }
-
 
 class BaseExtraction(ABC):
     @abstractmethod
